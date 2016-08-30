@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:security="http://www.springframework.org/schema/security"
+             xmlns:p="http://www.springframework.org/schema/p"
+             xsi:schemaLocation="http://www.springframework.org/schema/security
+                                 http://www.springframework.org/schema/security/spring-security-3.2.xsd
+                                 http://www.springframework.org/schema/beans
+                                http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+   <!-- 配置web相关权限控制 -->
+   <security:http auto-config="true">
+   		<!-- 登录表单配置 -->
+		<security:form-login
+			login-page="/login.jsp"
+			login-processing-url="/login.do"
+			username-parameter="username"
+			password-parameter="password"
+			default-target-url="/index.jsp"
+			authentication-success-handler-ref="authSuccess"
+		/>
+		<!-- 登出配置 -->
+		<security:logout 
+			invalidate-session="true"
+			logout-url="/logout.do"
+			logout-success-url="/login.jsp?logout"
+		/>
+		<!-- rememberme配置 -->
+		<security:remember-me
+			token-validity-seconds="604800"
+			token-repository-ref="tokenRepository"
+			remember-me-parameter="rememberme"
+		/>
+		<!-- 配置登录页面不进行权限控制 -->
+		<security:intercept-url pattern="/login.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY"/>   		
+   		<security:intercept-url pattern="/**" access="ROLE_INDEX"/>
+   </security:http>
+   <!-- 配置认证器 -->
+   <security:authentication-manager>
+   		<security:authentication-provider user-service-ref="userDetailsService">
+   			<!-- 指定密码的加密方式为MD5 -->
+   			<security:password-encoder hash="md5"/>
+   		</security:authentication-provider>
+   </security:authentication-manager>
+   <!-- 认证成功处理类 -->
+   <bean id="authSuccess" class="com.wjg.basic.security.handler.AuthenticationSuccessHandlerImpl"/> 
+   <!-- rememberMe token持久化方式 -->
+   <bean id="tokenRepository" class = "org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl">
+   		<!-- 数据源 -->
+        <property name="dataSource" ref="dataSource"/>
+   </bean> 
+</beans>

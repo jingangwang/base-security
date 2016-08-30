@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wjg.basic.security.mapper.SysUserMapper">
+    <resultMap id="sysUserPO" type="com.wjg.basic.security.po.SysUserPO">
+        <id property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="enabled" column="enabled"/>
+    </resultMap>
+    <select id="findUserByUsername" resultMap="sysUserPO">
+        select * from sys_user where username=#{username} and enabled=true
+    </select>
+</mapper>

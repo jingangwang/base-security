@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wjg.basic.security.mapper.SysGroupMapper">
+    <resultMap id="sysGroupPO" type="com.wjg.basic.security.po.SysGroupPO">
+        <id property="groupId" column="group_id"/>
+        <result property="groupName" column="group_name"/>
+        <result property="groupDesc" column="group_desc"/>
+        <result property="enabled" column="enabled"/>
+    </resultMap>
+    <select id="findGroupByUser" resultMap="sysGroupPO" parameterType="SysUserPO">
+        select
+        g.*
+        from sys_user_group ug left join sys_group g on ug.group_id=g.group_id
+        where ug.user_id=#{userId} and g.enabled=true
+    </select>
+</mapper>

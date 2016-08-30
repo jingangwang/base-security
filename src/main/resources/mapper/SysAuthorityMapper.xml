@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wjg.basic.security.mapper.SysAuthorityMappper">
+    <resultMap id="sysAuthorityPO" type="com.wjg.basic.security.po.SysAuthorityPO">
+        <id property="authorityId" column="authority_id"/>
+        <result property="authority" column="authority"/>
+        <result property="authorityDesc" column="authorityDesc"/>
+        <result property="enabled" column="enabled"/>
+    </resultMap>
+    <select id="findAuthoritysByGroup" resultMap="sysAuthorityPO" parameterType="list">
+        select 
+        a.*
+        from sys_group_authority ga left join sys_authority a on ga.authority_id=a.authority_id
+        where ga.group_id in
+        <foreach collection="list" open="(" close=")" separator="," item="group">
+        	#{group.groupId}
+        </foreach>
+        and a.enabled=true
+    </select>
+</mapper>
